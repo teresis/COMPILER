@@ -8,11 +8,11 @@ CC = gcc
 
 CFLAGS =
 
-OBJS = main.o util.o scan.o
+OBJS = y.tab.o lex.yy.o main.o util.o
 OBJS_FLEX = main.o util.o lex.yy.o
 
 cminus_test: $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o cminus_test
+	$(CC) $(CFLAGS) $(OBJS) -o cminus_test -ll
 
 main.o: main.c globals.h util.h scan.h
 	$(CC) $(CFLAGS) -c main.c
@@ -29,7 +29,9 @@ cminus_flex: $(OBJS_FLEX)
 lex.yy.o: cminus.l scan.h util.h globals.h
 	flex cminus.l
 	$(CC) $(CFLAGS) -c lex.yy.c 
-
+y.tab.o: cminus.y globals.h
+	yacc -d cminus.y
+	$(CC) -c y.tab.c
 clean:
 	-rm cminus_test
 	-rm cminus_flex
